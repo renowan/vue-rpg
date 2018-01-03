@@ -16,6 +16,7 @@ import Yagai from '@/components/Yagai'
 import Character from '@/components/Character'
 import constant from './constant'
 import MapCollection from './MapCollection.js'
+import SaveData from './SaveData.js'
 
 export default {
   name: 'app',
@@ -25,13 +26,17 @@ export default {
   },
   data () {
     return {
+      // app
       mapName: '',
       characterX: 7,
       characterY: 6,
       constant,
       charDir: 0,
       baseLayer: [],
-      objLayer: []
+      objLayer: [],
+
+      // save, ゲーム進行フラグ
+
     }
   },
   created () {
@@ -50,7 +55,7 @@ export default {
     },
     keyup (e) {
       const keyCode = e.keyCode
-      // console.log(keyCode)
+      console.log(keyCode)
       switch (keyCode) {
         case 38:
           // ↑
@@ -71,6 +76,8 @@ export default {
           // →
           this.charDir = 3
           if (this.canMove('x', 1)) this.characterX ++
+        case 67:
+          this.investigate()
           break
       }
       this.checkNextMasuAction()
@@ -86,30 +93,58 @@ export default {
       if (!nextBase) return false
 
       // 背景で行けない場所
-      const validMasu = '*11-01*'
-      if (validMasu.indexOf(nextBase) > -1) return false 
+      const validMasu = '*11-01*14-07*14-10*'
+      console.log('nextBase', nextBase)
+      if (validMasu.indexOf(nextBase) > -1) return false
       return true
     },
     checkNextMasuAction () {
       let x = this.characterX
       let y = this.characterY
-      
+
       const mapName = this.mapName
-      const location = `${String(x)}-${String(y)}`
-      console.log(MapCollection[mapName].event)
-      if (MapCollection[mapName].event.hasOwnProperty(location)) {
-        console.log('location event', MapCollection[mapName].event[location])
+
+      if (MapCollection[mapName].event[y][x]) {
+        // const eventNum = `obj${MapCollection[mapName].event[y][x]}`
+        const eventNum = MapCollection[mapName].event[y][x]
+        const eventObj = MapCollection[mapName].eventObj[eventNum]
+        const eventType = Object.keys(eventObj)[0]
+
+        switch (eventType) {
+          case 'link':
+            this.goLink(eventObj)
+            break;
+        }
       }
-      
-      // if (this.objLayer[y] && this.objLayer[y][x] && this.objLayer[y][x] !== '00-00') {
-      //   const nextObj = this.objLayer[y][x]
-      //   console.log('何かあるぞ', x, y, this.objLayer[y][x])
-      //   // 外に出た
-      //   if (nextObj === '00-01') {
-      //     const outSideMapName = MapCollection[this.mapName].outSideMap
-      //     this.setMap(outSideMapName)
-      //   }
-      // }
+    },
+    goLink (obj) {
+      console.log('goLink', obj)
+      this.setMap(obj.link)
+      this.characterX = obj.x
+      this.characterY = obj.y
+    },
+    investigate () {
+      let x = this.characterX
+      let y = this.characterY
+
+      const charDir = this.charDir
+
+      switch (charDir) {
+        case 0:
+          y ++
+          break;
+        case 1:
+          x --
+          break;
+        case 2:
+          y --
+          break;
+        case 3:
+          x ++
+          break;
+      }
+      if (!this.event[y] || this.event[y][x]) return
+      // this.event[y][x]
     }
   }
 }
