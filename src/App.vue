@@ -56,6 +56,7 @@ export default {
       eventData.forEach((elm, index) => {
         const targetMasuEvnt = MapCollection[mapName].eventObj[elm]
         console.log('targetMasuEvnt', targetMasuEvnt)
+        targetMasuEvnt.valid = false
       })
       
       this.baseLayer = MapCollection[mapName].baseLayer
