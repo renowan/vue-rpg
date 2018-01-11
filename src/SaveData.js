@@ -9,10 +9,12 @@ export default {
   app: {
     world1: {
       // key 1持ってるか
+      eventObj: [],
       key1: false
     },
     village1: {
       // key 1持ってるか
+      eventObj: ['2'],
       key1: false
     }
   }

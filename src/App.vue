@@ -50,6 +50,14 @@ export default {
   methods: {
     setMap (mapName) {
       this.mapName = mapName
+    
+      // 保存データのフラグ処理
+      const eventData = SaveData.app[mapName].eventObj
+      eventData.forEach((elm, index) => {
+        const targetMasuEvnt = MapCollection[mapName].eventObj[elm]
+        console.log('targetMasuEvnt', targetMasuEvnt)
+      })
+      
       this.baseLayer = MapCollection[mapName].baseLayer
       this.objLayer = MapCollection[mapName].objLayer
     },
@@ -94,7 +102,7 @@ export default {
 
       // 背景で行けない場所
       const validMasu = '*11-01*14-07*14-10*'
-      console.log('nextBase', nextBase)
+
       if (validMasu.indexOf(nextBase) > -1) return false
       return true
     },
