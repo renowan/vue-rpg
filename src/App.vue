@@ -50,15 +50,18 @@ export default {
   methods: {
     setMap (mapName) {
       this.mapName = mapName
-    
+
       // 保存データのフラグ処理
       const eventData = SaveData.app[mapName].eventObj
       eventData.forEach((elm, index) => {
         const targetMasuEvnt = MapCollection[mapName].eventObj[elm]
         console.log('targetMasuEvnt', targetMasuEvnt)
-        targetMasuEvnt.valid = false
+        targetMasuEvnt.value = false
       })
-      
+
+      console.log('SaveData', SaveData)
+      console.log('MapCollection', MapCollection)
+
       this.baseLayer = MapCollection[mapName].baseLayer
       this.objLayer = MapCollection[mapName].objLayer
     },

@@ -80,11 +80,15 @@ export default {
     ],
     eventObj: {
       1: { link: 'world1', x: 11, y: 3 },
-      2: { 
+      2: {
         takara: {
+          x: 6,
+          y: 3,
           itemId: 1,
-          valid: true
-        } 
+          validImg: '27-07',
+          invalidImg: '27-08',
+          value: true
+        }
       },
     }
   }
