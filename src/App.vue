@@ -17,6 +17,7 @@ import Character from '@/components/Character'
 import constant from './constant'
 import MapCollection from './MapCollection.js'
 import SaveData from './SaveData.js'
+import ItemCollection from './ItemCollection.js'
 
 export default {
   name: 'app',
@@ -50,6 +51,8 @@ export default {
   methods: {
     setMap (mapName) {
       this.mapName = mapName
+      this.baseLayer = MapCollection[mapName].baseLayer
+      this.objLayer = MapCollection[mapName].objLayer
     
       // 保存データのフラグ処理
       const eventData = SaveData.app[mapName].eventObj
@@ -57,10 +60,14 @@ export default {
         const targetMasuEvnt = MapCollection[mapName].eventObj[elm]
         console.log('targetMasuEvnt', targetMasuEvnt)
         targetMasuEvnt.valid = false
+        const _x = targetMasuEvnt.takara.x
+        const _y = targetMasuEvnt.takara.y
+        
+        // this.objLayer[_x][_y] = ItemCollection[elm].inValidImg
+        // MapCollection[mapName].objLayer
       })
       
-      this.baseLayer = MapCollection[mapName].baseLayer
-      this.objLayer = MapCollection[mapName].objLayer
+
     },
     keyup (e) {
       const keyCode = e.keyCode
@@ -168,7 +175,7 @@ export default {
 .app-container {
   width: 480px;
   height: 416px;
-  background-color: #999;
+  background-color: #000;
   position: relative;
   overflow: hidden;
 }
