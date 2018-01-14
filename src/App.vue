@@ -53,7 +53,7 @@ export default {
       this.mapName = mapName
       this.baseLayer = MapCollection[mapName].baseLayer
       this.objLayer = MapCollection[mapName].objLayer
-    
+
       // 保存データのフラグ処理
       const eventData = SaveData.app[mapName].eventObj
       eventData.forEach((elm, index) => {
@@ -62,16 +62,16 @@ export default {
         targetMasuEvnt.valid = false
         const _x = targetMasuEvnt.takara.x
         const _y = targetMasuEvnt.takara.y
-        
+
         // this.objLayer[_x][_y] = ItemCollection[elm].inValidImg
         // MapCollection[mapName].objLayer
       })
-      
+
 
     },
     keyup (e) {
       const keyCode = e.keyCode
-      console.log(keyCode)
+      // console.log(keyCode)
       switch (keyCode) {
         case 38:
           // ↑
@@ -124,7 +124,7 @@ export default {
         // const eventNum = `obj${MapCollection[mapName].event[y][x]}`
         const eventNum = MapCollection[mapName].event[y][x]
         const eventObj = MapCollection[mapName].eventObj[eventNum]
-        const eventType = Object.keys(eventObj)[0]
+        const eventType = eventObj.type
 
         switch (eventType) {
           case 'link':
@@ -133,11 +133,10 @@ export default {
         }
       }
     },
-    goLink (obj) {
-      console.log('goLink', obj)
-      this.setMap(obj.link)
-      this.characterX = obj.x
-      this.characterY = obj.y
+    goLink (eventObj) {
+      this.setMap(eventObj.mapName)
+      this.characterX = eventObj.x
+      this.characterY = eventObj.y
     },
     investigate () {
       let x = this.characterX
@@ -159,7 +158,7 @@ export default {
           x ++
           break;
       }
-      if (!this.event[y] || this.event[y][x]) return
+      // if (!this.event[y] || this.event[y][x]) return
       // this.event[y][x]
     }
   }

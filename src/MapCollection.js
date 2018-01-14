@@ -79,14 +79,14 @@ export default {
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     ],
     eventObj: {
-      1: { link: 'world1', x: 11, y: 3 },
-      2: { 
+      1: { type: 'link', mapName: 'world1', x: 11, y: 3 },
+      2: {
         takara: {
           itemId: 1,
           valid: true,
           x: 3,
           y: 6
-        } 
+        }
       },
     }
   }
