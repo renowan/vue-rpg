@@ -14,8 +14,9 @@ export default {
     },
     village1: {
       // key 1持ってるか
-      eventObj: ['2'],
-      key1: false
+      eventObj: {
+        2: false
+      },
     }
   }
 }

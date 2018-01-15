@@ -37,7 +37,7 @@ export default {
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     ],
     eventObj: {
-      1: { link: 'village1', x: 9, y: 9 }
+      1: { type: 'link', mapName: 'village1', x: 9, y: 8 },
     }
   },
   village1: {
@@ -81,12 +81,11 @@ export default {
     eventObj: {
       1: { type: 'link', mapName: 'world1', x: 11, y: 3 },
       2: {
-        takara: {
-          itemId: 1,
-          valid: true,
-          x: 3,
-          y: 6
-        }
+        type: 'takara',
+        itemId: 1,
+        value: false,
+        x: 3,
+        y: 6
       },
     }
   }

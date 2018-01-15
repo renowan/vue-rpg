@@ -35,7 +35,8 @@ export default {
       charDir: 0,
       baseLayer: [],
       objLayer: [],
-
+      event: [],
+      eventObj: {},
       // save, ゲーム進行フラグ
 
     }
@@ -46,28 +47,37 @@ export default {
     window.addEventListener('keyup', this.keyup)
   },
   watch: {
-
+    objLayer (val) {
+      console.log('watch change objLayer')
+    }
   },
   methods: {
     setMap (mapName) {
+      const baseLayer = MapCollection[mapName].baseLayer.slice(0)
+      const objLayer  = MapCollection[mapName].objLayer.slice(0)
+      const event     = MapCollection[mapName].event.slice(0)
+      const eventObj  = Object.assign({}, MapCollection[mapName].eventObj)
+
+      const saveDataEventObj = SaveData.app[mapName].eventObj
+
+      for (var elm in eventObj) {
+        if (eventObj.hasOwnProperty(elm)) {
+          if (eventObj[elm].type === 'takara') {
+            // render、SaveDataの状態に応じてobjLayerを書き換える
+            const x = eventObj[elm].x
+            const y = eventObj[elm].y
+            const status = saveDataEventObj[elm]
+            objLayer[y][x] = status ? '27-08' : '27-07'
+            eventObj[elm].value = status
+          }
+        }
+      }
+
       this.mapName = mapName
-      this.baseLayer = MapCollection[mapName].baseLayer
-      this.objLayer = MapCollection[mapName].objLayer
-
-      // 保存データのフラグ処理
-      const eventData = SaveData.app[mapName].eventObj
-      eventData.forEach((elm, index) => {
-        const targetMasuEvnt = MapCollection[mapName].eventObj[elm]
-        console.log('targetMasuEvnt', targetMasuEvnt)
-        targetMasuEvnt.valid = false
-        const _x = targetMasuEvnt.takara.x
-        const _y = targetMasuEvnt.takara.y
-
-        // this.objLayer[_x][_y] = ItemCollection[elm].inValidImg
-        // MapCollection[mapName].objLayer
-      })
-
-
+      this.baseLayer = baseLayer
+      this.objLayer = objLayer
+      this.event = event
+      this.eventObj = eventObj
     },
     keyup (e) {
       const keyCode = e.keyCode
@@ -92,7 +102,9 @@ export default {
           // →
           this.charDir = 3
           if (this.canMove('x', 1)) this.characterX ++
+          break
         case 67:
+          // C 調べる
           this.investigate()
           break
       }
@@ -125,7 +137,7 @@ export default {
         const eventNum = MapCollection[mapName].event[y][x]
         const eventObj = MapCollection[mapName].eventObj[eventNum]
         const eventType = eventObj.type
-
+        // console.log('eventType', eventType)
         switch (eventType) {
           case 'link':
             this.goLink(eventObj)
@@ -139,27 +151,29 @@ export default {
       this.characterY = eventObj.y
     },
     investigate () {
+      console.log('investigate 調べる')
       let x = this.characterX
       let y = this.characterY
-
-      const charDir = this.charDir
-
-      switch (charDir) {
-        case 0:
-          y ++
-          break;
-        case 1:
-          x --
-          break;
-        case 2:
-          y --
-          break;
-        case 3:
-          x ++
-          break;
+      const mapName = this.mapName
+      const targetEventNum = this.event[y][x]
+      // イベントが存在するか
+      if (this.eventObj[targetEventNum] && this.eventObj[targetEventNum].type === 'takara') {
+        console.log('たからだよ', this.eventObj[targetEventNum].value)
+        const result = this.eventObj[targetEventNum].value
+        if (result) {
+          // すでにおっている
+          console.log('もってるよ')
+        } else {
+          console.log('もってないよ')
+          // 保存
+          SaveData.app[mapName].eventObj[targetEventNum] = true
+          this.eventObj[targetEventNum].value = true
+          const objLayer = this.objLayer.slice(0)
+          objLayer[y][x] = '27-08'
+          this.objLayer = objLayer
+        }
       }
-      // if (!this.event[y] || this.event[y][x]) return
-      // this.event[y][x]
+
     }
   }
 }

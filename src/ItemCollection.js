@@ -1,6 +1,7 @@
 export default {
   '1': {
-    validImg: '27-7',
-    inValidImg: '27-8',
+    name: 'やくそう'
+    // validImg: '27-7',
+    // inValidImg: '27-8',
   }
 }
