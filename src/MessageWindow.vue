@@ -17,10 +17,36 @@ export default {
       return this.message[this.page]
     }
   },
+  watch: {
+    message (val) {
+      if (val.length > 0) {
+          window.addEventListener('keyup', this.keyup)
+      }
+    },
+    page (val) {
+      if (val > this.message.length - 1) {
+        this.init()
+        window.removeEventListener('keyup', this.keyup)
+      }
+    }
+  },
   data: () => ({
     page: 0
     // show: false
-  })
+  }),
+  methods: {
+    init () {
+      this.page = 0
+      this.$emit('hiddenMessage')
+    },
+    keyup (e) {
+      const keyCode = e.keyCode
+      // space key
+      if (keyCode === 32) {
+        this.page ++
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

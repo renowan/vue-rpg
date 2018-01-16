@@ -83,7 +83,8 @@ export default {
       2: {
         type: 'takara',
         itemId: 1,
-        value: false,
+        valid: true,
+        value: 1,
         x: 3,
         y: 6
       },

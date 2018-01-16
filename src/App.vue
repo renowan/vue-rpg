@@ -6,7 +6,7 @@
           <div class="app-container">
             <Yagai :baseLayer="baseLayer" :objLayer="objLayer" :characterX="characterX" :characterY="characterY" :constant="constant"></Yagai>
             <Character :charDir="charDir" :characterX="characterX" :characterY="characterY" :constant="constant"></Character>
-            <MessageWindow :message="message"></MessageWindow>
+            <MessageWindow :message="message" @hiddenMessage="hiddenMessage"></MessageWindow>
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default {
       eventObj: {},
       message: [],
       // save, ゲーム進行フラグ
-
+      stopCharacterMove: false,
     }
   },
   created () {
@@ -83,7 +83,7 @@ export default {
             const y = eventObj[elm].y
             const status = saveDataEventObj[elm]
             objLayer[y][x] = status ? '27-08' : '27-07'
-            eventObj[elm].value = status
+            eventObj[elm].valid = status
           }
         }
       }
@@ -95,8 +95,9 @@ export default {
       this.eventObj = eventObj
     },
     keyup (e) {
+      if (this.stopCharacterMove) return
       const keyCode = e.keyCode
-      // console.log(keyCode)
+      console.log(keyCode)
       switch (keyCode) {
         case 38:
           // ↑
@@ -122,6 +123,10 @@ export default {
           // C 調べる
           this.investigate()
           break
+        // case 32:
+        //   // C 調べる
+        //   console.log('next message')
+        //   break
       }
       this.checkNextMasuAction()
     },
@@ -166,28 +171,42 @@ export default {
       this.characterY = eventObj.y
     },
     investigate () {
-      console.log('investigate 調べる')
       let x = this.characterX
       let y = this.characterY
       const mapName = this.mapName
       const targetEventNum = this.event[y][x]
       // イベントが存在するか
       if (this.eventObj[targetEventNum] && this.eventObj[targetEventNum].type === 'takara') {
-        console.log('たからだよ', this.eventObj[targetEventNum].value)
-        const result = this.eventObj[targetEventNum].value
+        console.log('たからだよ', this.eventObj[targetEventNum].valid)
+        const result = this.eventObj[targetEventNum].valid
         if (result) {
           // すでにおっている
-          console.log('もってるよ')
+          // console.log('空だよ')
+          this.message = ['空だよ']
+          this.stopCharacterMove = true
         } else {
-          console.log('もってないよ')
+          console.log('なにか入ってるよ')
           // 保存
           SaveData.app[mapName].eventObj[targetEventNum] = true
-          this.eventObj[targetEventNum].value = true
+          this.eventObj[targetEventNum].valid = true
           const objLayer = this.objLayer.slice(0)
           objLayer[y][x] = '27-08'
           this.objLayer = objLayer
+
+          const itemId = this.eventObj[targetEventNum].itemId
+          const value = this.eventObj[targetEventNum].value
+          const itemName = ItemCollection[itemId].name
+          const txt1 = `${itemName}が${value}個を手に入れた`
+          const txt2 = 'ありがとうございます'
+          const message = [txt1, txt2]
+          this.message = message
+          this.stopCharacterMove = true
         }
       }
+    },
+    hiddenMessage () {
+      this.stopCharacterMove = false,
+      this.message = []
     },
     test () {
       console.log('test')
