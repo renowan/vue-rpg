@@ -1,12 +1,24 @@
 <template>
   <div id="app">
     <div class="container mt32">
-      <div class="col-xs-12">
-        <div class="app-container">
-          <Yagai :baseLayer="baseLayer" :objLayer="objLayer" :characterX="characterX" :characterY="characterY" :constant="constant"></Yagai>
-          <Character :charDir="charDir" :characterX="characterX" :characterY="characterY" :constant="constant"></Character>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="app-container">
+            <Yagai :baseLayer="baseLayer" :objLayer="objLayer" :characterX="characterX" :characterY="characterY" :constant="constant"></Yagai>
+            <Character :charDir="charDir" :characterX="characterX" :characterY="characterY" :constant="constant"></Character>
+            <MessageWindow :message="message"></MessageWindow>
+          </div>
         </div>
       </div>
+
+      <div class="row mt24">
+        <div class="col-xs-12">
+          <button type="button" class="btn btn-default" @click="test">
+            test
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -18,12 +30,14 @@ import constant from './constant'
 import MapCollection from './MapCollection.js'
 import SaveData from './SaveData.js'
 import ItemCollection from './ItemCollection.js'
+import MessageWindow from './MessageWindow'
 
 export default {
   name: 'app',
   components: {
     Yagai,
-    Character
+    Character,
+    MessageWindow
   },
   data () {
     return {
@@ -37,6 +51,7 @@ export default {
       objLayer: [],
       event: [],
       eventObj: {},
+      message: [],
       // save, ゲーム進行フラグ
 
     }
@@ -173,7 +188,10 @@ export default {
           this.objLayer = objLayer
         }
       }
-
+    },
+    test () {
+      console.log('test')
+      this.message = ['aboahhaoh']
     }
   }
 }
